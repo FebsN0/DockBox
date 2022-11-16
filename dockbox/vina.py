@@ -53,7 +53,8 @@ MGLPATH=`python -c "print '/'.join('$MGLPATH'.split('/')[:-3])"`
 export PYTHONPATH=$PYTHONPATH:$MGLPATH
 
 # prepare ligand
-prepare_ligand4.py -l %(file_l)s -o ligand.pdbqt
+cp ../ligand_dbx.mol2 .
+prepare_ligand4.py -l ligand_dbx.mol2 -o ligand.pdbqt
 python check_ligand_pdbqt.py ligand.pdbqt
 
 # prepare receptor
