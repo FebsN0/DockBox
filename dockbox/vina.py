@@ -52,13 +52,18 @@ MGLPATH=`which prepare_ligand4.py`
 MGLPATH=`python -c "print '/'.join('$MGLPATH'.split('/')[:-3])"`
 export PYTHONPATH=$PYTHONPATH:$MGLPATH
 
+
+
 # prepare ligand
-cp ../ligand_dbx.mol2 .
-prepare_ligand4.py -l ligand_dbx.mol2 -o ligand.pdbqt
+wordLig=%(file_l)s
+filenameLig=$(echo $word | awk -F "/" '{print $NF}')
+prepare_ligand4.py -l ../$filenameLig -o ligand.pdbqt
 python check_ligand_pdbqt.py ligand.pdbqt
 
 # prepare receptor
-prepare_receptor4.py -U nphs_lps_waters -r %(file_r)s -o target.pdbqt &> prepare_receptor4.log
+wordRec=%(file_r)s
+filenameRec=$(echo $word | awk -F "/" '{print $NF}')
+prepare_receptor4.py -U nphs_lps_waters -r ../$filenameRec -o target.pdbqt &> prepare_receptor4.log
 python check_ions.py target.pdbqt prepare_receptor4.log
 
 # run vina
@@ -74,11 +79,16 @@ MGLPATH=`python -c "print '/'.join('$MGLPATH'.split('/')[:-3])"`
 export PYTHONPATH=$PYTHONPATH:$MGLPATH
 
 # prepare ligand
-prepare_ligand4.py -l %(file_l)s -o ligand.pdbqt
+wordLig=%(file_l)s
+filenameLig=$(echo $word | awk -F "/" '{print $NF}')
+prepare_ligand4.py -l ../$filenameLig -o ligand.pdbqt
 python check_ligand_pdbqt.py ligand.pdbqt
 
+
 if [ ! -f target.pdbqt ]; then
-  prepare_receptor4.py -U nphs_lps_waters -r %(file_r)s -o target.pdbqt > prepare_receptor4.log
+  wordRec=%(file_r)s
+  filenameRec=$(echo $word | awk -F "/" '{print $NF}')
+  prepare_receptor4.py -U nphs_lps_waters -r ../$filenameRec -o target.pdbqt > prepare_receptor4.log
   python check_ions.py target.pdbqt prepare_receptor4.log
 fi
 
