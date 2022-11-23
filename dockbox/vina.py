@@ -54,14 +54,14 @@ export PYTHONPATH=$PYTHONPATH:$MGLPATH
 
 # prepare ligand
 filepathLig=%(file_l)s
-filenameLig=$(echo $word | awk -F "/" '{print $NF}')
+filenameLig=$(echo $filepathLig | awk -F "/" '{print $NF}')
 cp $filepathLig $filenameLig
 prepare_ligand4.py -l $filenameLig -o ligand.pdbqt
 python check_ligand_pdbqt.py ligand.pdbqt
 
 # prepare receptor
-wordRec=%(file_r)s
-filenameRec=$(echo $word | awk -F "/" '{print $NF}')
+filepathRec=%(file_r)s
+filenameRec=$(echo $filepathRec | awk -F "/" '{print $NF}')
 cp $filepathRec $filenameRec
 prepare_receptor4.py -U nphs_lps_waters -r $filenameRec -o target.pdbqt &> prepare_receptor4.log
 python check_ions.py target.pdbqt prepare_receptor4.log
@@ -88,7 +88,7 @@ python check_ligand_pdbqt.py ligand.pdbqt
 
 if [ ! -f target.pdbqt ]; then
   filepathRec=%(file_r)s
-  filenameRec=$(echo $filenameRec | awk -F "/" '{print $NF}')
+  filenameRec=$(echo $filepathRec | awk -F "/" '{print $NF}')
   cp $filepathRec $filenameRec
   prepare_receptor4.py -U nphs_lps_waters -r $filenameRec -o target.pdbqt > prepare_receptor4.log
   python check_ions.py target.pdbqt prepare_receptor4.log
